@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opengles_lightTrace", "opengles_lightTrace.vcxproj", "{6633CF47-D42E-476B-97A4-36539255BCBC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxproj", "{3D7BA682-0328-35E0-AA69-69278B3C6329}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		MinSizeRel|x64 = MinSizeRel|x64
+		MinSizeRel|x86 = MinSizeRel|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+		RelWithDebInfo|x64 = RelWithDebInfo|x64
+		RelWithDebInfo|x86 = RelWithDebInfo|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.Debug|x64.ActiveCfg = Debug|x64
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.Debug|x64.Build.0 = Debug|x64
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.Debug|x86.ActiveCfg = Debug|Win32
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.Debug|x86.Build.0 = Debug|Win32
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.MinSizeRel|x64.ActiveCfg = Release|x64
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.MinSizeRel|x64.Build.0 = Release|x64
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.MinSizeRel|x86.ActiveCfg = Release|Win32
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.MinSizeRel|x86.Build.0 = Release|Win32
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.Release|x64.ActiveCfg = Release|x64
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.Release|x64.Build.0 = Release|x64
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.Release|x86.ActiveCfg = Release|Win32
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.Release|x86.Build.0 = Release|Win32
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.RelWithDebInfo|x64.ActiveCfg = Release|x64
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.RelWithDebInfo|x64.Build.0 = Release|x64
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.RelWithDebInfo|x86.ActiveCfg = Release|Win32
+		{6633CF47-D42E-476B-97A4-36539255BCBC}.RelWithDebInfo|x86.Build.0 = Release|Win32
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.Debug|x64.ActiveCfg = Debug|x64
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.Debug|x64.Build.0 = Debug|x64
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.Debug|x86.ActiveCfg = Debug|x64
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.MinSizeRel|x86.ActiveCfg = MinSizeRel|x64
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.Release|x64.ActiveCfg = Release|x64
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.Release|x64.Build.0 = Release|x64
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.Release|x86.ActiveCfg = Release|x64
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+		{3D7BA682-0328-35E0-AA69-69278B3C6329}.RelWithDebInfo|x86.ActiveCfg = RelWithDebInfo|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4ECF4622-4DA5-4EB5-951A-AC6E37A47BDE}
+	EndGlobalSection
+EndGlobal
