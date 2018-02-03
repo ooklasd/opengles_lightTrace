@@ -149,13 +149,13 @@ void Draw ( ESContext *esContext )
 	//ÉèÖÃlight
 	for each (Light it in userData->lights)
 	{
-		it.toGL();
+		it.drawabletoGL(userData);
 	}
 
 	// Load the vertex data
 	for each (Object3D it in userData->objects)
 	{
-		it.toGL();
+		it.drawabletoGL(userData);
 	}
 }
 

@@ -6,7 +6,9 @@
 typedef struct
 {
 	// Handle to a program object
-	GLuint programObject;
+	GLuint SphereProgramObject;//‘≤–Œ‰÷»æ∆˜
+	GLuint PanelProgramObject;//∆Ω√Ê‰÷»æ∆˜
+	GLuint SceneProgramObject;
 
 	//≥°æ∞
 	std::list<Object3D> objects;
@@ -15,5 +17,10 @@ typedef struct
 	std::list<Light> lights;
 	
 	CameraPerspective camera;
+
+	GLuint mvpLoc;
+
+	GLuint radiusLoc;
+	GLuint radiusLoc;
 
 } UserData;
