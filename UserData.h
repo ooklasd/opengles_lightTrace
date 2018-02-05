@@ -9,6 +9,7 @@ struct UserData
 	// Handle to a program object
 	GLuint SphereProgramObject;//圆形渲染器
 	GLuint PanelProgramObject;//平面渲染器
+	GLuint curProgramObject;//平面渲染器
 	//GLuint SceneProgramObject;
 
 	//场景

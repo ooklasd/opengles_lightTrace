@@ -71,7 +71,7 @@ Plane::Plane(const std::vector<Vec3>& points)
 }
 void Plane::initGL(UserData* userdata)
 {
-
+	Object3D::initGL(userdata);
 	//创建顶点数据缓存并录入
 	glGenBuffers(_points.size(), &_pointsBufferVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, _pointsBufferVBO);
@@ -81,7 +81,6 @@ void Plane::initGL(UserData* userdata)
 	glGenBuffers(_points.size(), &_pointsBufferIBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _pointsBufferIBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*_pointsIndices.size(), &_pointsIndices.front(), GL_STATIC_DRAW);
-
 
 }
 
@@ -171,4 +170,19 @@ void Sphere::releaseGL()
 
 	glDeleteBuffers(1,&_pointsBufferVBO);
 	glDeleteBuffers(1, &_pointsBufferIBO);
+}
+
+Object3D::Object3D()
+{
+	esMatrixLoadIdentity(&_m);
+}
+
+void Object3D::initGL(UserData* userdata)
+{
+	userdata->mvpLoc = glGetUniformLocation(userdata->curProgramObject, "u_mvpMatrix");
+}
+
+void Object3D::releaseGL()
+{
+
 }

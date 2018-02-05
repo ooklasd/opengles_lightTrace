@@ -19,8 +19,9 @@ public:
 	{
 		TYPE_Plane, TYPE_Sphere
 	};
-	virtual void initGL(UserData* userdata) = 0;
-	virtual void releaseGL() = 0;
+	Object3D();
+	virtual void initGL(UserData* userdata);
+	virtual void releaseGL();
 	//º∆À„Ωªµ„
 	virtual bool intersect(const Vec3& pos, const Vec3& dir, Vec3& hitPoint) = 0;
 

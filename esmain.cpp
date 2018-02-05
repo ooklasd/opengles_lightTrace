@@ -63,6 +63,7 @@ int Init ( ESContext *esContext )
 	char vShaderStr[] =
 		"#version 300 es                          \n"
 		"layout(location = 0) in vec4 vPosition;  \n"
+		"uniform mat4 u_mvpMatrix;                   \n"
 		"void main()                              \n"
 		"{                                        \n"
 		"   gl_Position = vPosition;              \n"
@@ -83,6 +84,18 @@ int Init ( ESContext *esContext )
 	glClearColor ( 1.0f, 1.0f, 1.0f, 0.0f );
 
 	//设置对象
+	auto& objs = userData->objects;
+
+	//添加一个球体
+	//objs.push_back(std::shared_ptr<Object3D>(new Sphere(Vec3({0.f,0.f,0.f}),1.f )));
+
+	//添加地面面
+	auto p = new Plane({ 
+		Vec3{ -0.3f	,-0.3f	,0.0f },
+		Vec3{ 0.3f	,-0.3f	,0.0f },
+		Vec3{ 0.3f	,0.3f	,0.0f } });
+	objs.push_back(std::shared_ptr<Object3D>(p));
+
 
 	//初始化对象
 	for each (auto obj in userData->objects)
@@ -115,12 +128,14 @@ void Draw ( ESContext *esContext )
 		switch (it->_type)
 		{
 		case Object3D::TYPE_Plane:
-			glUseProgram(userData->PanelProgramObject);
+			userData->curProgramObject = (userData->PanelProgramObject);
 			break;
 		case Object3D::TYPE_Sphere:
-			glUseProgram(userData->SphereProgramObject);
+			userData->curProgramObject = (userData->SphereProgramObject);
 			break;
 		}
+		glUseProgram(userData->curProgramObject);
+
 		//draw
 		it->drawabletoGL(esContext);
 	}
@@ -144,11 +159,14 @@ void Shutdown ( ESContext *esContext )
 	{
 		if (obj) obj->releaseGL();
 	}
+
+	delete userData;
+	esContext->userData = nullptr;
 }
 
 extern "C" int esMain( ESContext *esContext )
 {
-	esContext->userData = malloc ( sizeof ( UserData ) );
+	esContext->userData = new UserData();
 
 	esCreateWindow ( esContext, "light trace", 640, 320, ES_WINDOW_RGB );
 
