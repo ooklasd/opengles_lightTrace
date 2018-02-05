@@ -116,6 +116,20 @@ bool Plane::intersect(const Vec3 & pos, const Vec3 & dir, Vec3 & hitPoint)
 
 
 
+Sphere::Sphere(Vec3 center, float radius) :_center(center), _radius(radius)
+{
+	_type = Object3D::TYPE_Sphere;
+
+	_vertex = nullptr;
+	_indices = nullptr;
+	_pointsBufferVBO = 0;
+}
+
+Sphere::~Sphere()
+{
+	releaseGL();
+}
+
 bool Sphere::intersect(const Vec3& pos, const Vec3& dir, Vec3& hitPoint)
 {
 	throw std::logic_error("The method or operation is not implemented.");
@@ -124,15 +138,37 @@ bool Sphere::intersect(const Vec3& pos, const Vec3& dir, Vec3& hitPoint)
 void Sphere::drawabletoGL(ESContext *esContext)
 {
 	auto userdata = (UserData*)esContext->userData;
-	glBindBuffer(GL_ARRAY_BUFFER, _pointsBufferVBO);
-	glVertexAttribPointer(POSITION_LOC, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), nullptr);
+	glUniformMatrix4fv(userdata->mvpLoc, 1, GL_FALSE, &_m.m[0][0]);
+	glUniform1f(userdata->radiusLoc, _radius);
+	glUniform3fv(userdata->centerLoc,3 ,_center._v);
+
+	glVertexAttribPointer(POSITION_LOC, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),_vertex);
 	glEnableVertexAttribArray(POSITION_LOC);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _pointsBufferIBO);
 
-	glUniformMatrix4fv(userdata->mvpLoc, 1, GL_FALSE, &_m.m[0][0]);
-
 	glVertexAttrib3f(GL_COLOR, _color._v[0], _color._v[1], _color._v[2]);
+	glDrawElements(GL_TRIANGLE_STRIP, _indicesNumb, GL_UNSIGNED_INT, nullptr);
+}
 
-	glDrawElements(GL_TRIANGLES, _pointsIndices.size(), GL_UNSIGNED_INT, nullptr);
+void Sphere::initGL(UserData* userdata)
+{
+	releaseGL();
+	_indicesNumb = esGenSphere(10, _radius, &_vertex, nullptr, nullptr, &_indices);
+
+	glGenBuffers(_indicesNumb, &_pointsBufferIBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _pointsBufferIBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indicesNumb * sizeof(GLuint), _indices, GL_STATIC_DRAW);
+
+}
+
+void Sphere::releaseGL()
+{
+	delete[] _vertex;
+	_vertex = nullptr;
+	delete[] _indices;
+	_indices = nullptr;
+
+	glDeleteBuffers(1,&_pointsBufferVBO);
+	glDeleteBuffers(1, &_pointsBufferIBO);
 }

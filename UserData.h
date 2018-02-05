@@ -1,26 +1,32 @@
 #pragma once
 #include<vector>
 #include<list>
+#include<memory>
 #include"Common\esUtil.h"
 #include"scene.h"
-typedef struct
+struct UserData
 {
 	// Handle to a program object
 	GLuint SphereProgramObject;//圆形渲染器
 	GLuint PanelProgramObject;//平面渲染器
-	GLuint SceneProgramObject;
+	//GLuint SceneProgramObject;
 
 	//场景
-	std::list<Object3D> objects;
+	std::list<std::shared_ptr<Object3D>> objects;
 
 	//光源
-	std::list<Light> lights;
+	std::list<std::shared_ptr<Light>> lights;
 	
 	CameraPerspective camera;
 
-	GLuint mvpLoc;
+	GLuint mvpLoc;		//世界坐标
+	GLuint colorLoc;	//颜色
 
-	GLuint radiusLoc;
-	GLuint radiusLoc;
+	GLuint radiusLoc;	//半径
+	GLuint centerLoc;	//圆心
 
-} UserData;
+	float ambientLight;//环境光
+	Vec3 ambientColor;//环境光颜色
+	//GLuint radiusLoc;
+
+} ;

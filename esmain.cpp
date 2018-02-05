@@ -77,56 +77,19 @@ int Init ( ESContext *esContext )
 		"   fragColor = vec4 ( 1.0, 0.0, 0.0, 1.0 );  \n"
 		"}                                            \n";
 
-	GLuint vertexShader;
-	GLuint fragmentShader;
-	GLuint programObject;
-	GLint linked;
-
-	// Load the vertex/fragment shaders
-	vertexShader = LoadShader ( GL_VERTEX_SHADER, vShaderStr );
-	fragmentShader = LoadShader ( GL_FRAGMENT_SHADER, fShaderStr );
-
-	// Create the program object
-	programObject = glCreateProgram ( );
-
-	if ( programObject == 0 )
-	{
-		return 0;
-	}
-
-	glAttachShader ( programObject, vertexShader );
-	glAttachShader ( programObject, fragmentShader );
-
-	// Link the program
-	glLinkProgram ( programObject );
-
-	// Check the link status
-	glGetProgramiv ( programObject, GL_LINK_STATUS, &linked );
-
-	if ( !linked )
-	{
-		GLint infoLen = 0;
-
-		glGetProgramiv ( programObject, GL_INFO_LOG_LENGTH, &infoLen );
-
-		if ( infoLen > 1 )
-		{
-			char *infoLog = (char *)malloc ( sizeof ( char ) * infoLen );
-
-			glGetProgramInfoLog ( programObject, infoLen, NULL, infoLog );
-			esLogMessage ( "Error linking program:\n%s\n", infoLog );
-
-			free ( infoLog );
-		}
-
-		glDeleteProgram ( programObject );
-		return FALSE;
-	}
-
-	// Store the program object
-	userData->programObject = programObject;
+	userData->PanelProgramObject = esLoadProgram(vShaderStr, fShaderStr);
+	userData->SphereProgramObject = esLoadProgram(vShaderStr, fShaderStr);
 
 	glClearColor ( 1.0f, 1.0f, 1.0f, 0.0f );
+
+	//设置对象
+
+	//初始化对象
+	for each (auto obj in userData->objects)
+	{
+		obj->initGL(userData);
+	}
+
 	return TRUE;
 }
 
@@ -143,27 +106,44 @@ void Draw ( ESContext *esContext )
 	// Clear the color buffer
 	glClear ( GL_COLOR_BUFFER_BIT );
 
-	// Use the program object
-	glUseProgram ( userData->programObject );
-
-	//设置light
-	for each (Light it in userData->lights)
-	{
-		it.drawabletoGL(userData);
-	}
 
 	// Load the vertex data
-	for each (Object3D it in userData->objects)
+
+	for each (auto it in userData->objects)
 	{
-		it.drawabletoGL(userData);
+		// Use the program object
+		switch (it->_type)
+		{
+		case Object3D::TYPE_Plane:
+			glUseProgram(userData->PanelProgramObject);
+			break;
+		case Object3D::TYPE_Sphere:
+			glUseProgram(userData->SphereProgramObject);
+			break;
+		}
+		//draw
+		it->drawabletoGL(esContext);
 	}
+
+	////设置light
+	//for each (Light it in userData->lights)
+	//{
+	//	it.drawabletoGL(userData);
+	//}
+
 }
 
 void Shutdown ( ESContext *esContext )
 {
 	UserData *userData = (UserData *)esContext->userData;
 
-	glDeleteProgram ( userData->programObject );
+	glDeleteProgram(userData->PanelProgramObject);
+	glDeleteProgram(userData->SphereProgramObject);
+
+	for each (auto obj in userData->objects)
+	{
+		if (obj) obj->releaseGL();
+	}
 }
 
 extern "C" int esMain( ESContext *esContext )
@@ -176,7 +156,6 @@ extern "C" int esMain( ESContext *esContext )
 	{
 		return GL_FALSE;
 	}
-
 	esRegisterShutdownFunc ( esContext, Shutdown );
 	esRegisterDrawFunc ( esContext, Draw );
 

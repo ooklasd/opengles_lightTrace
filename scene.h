@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 
+
 struct Vec3
 {
 	GLfloat _v[3];
@@ -10,7 +11,7 @@ struct Vec3
 
 #define POSITION_LOC    0
 #define COLOR_LOC       1
-
+struct UserData;
 class Object3D
 {
 public:
@@ -18,8 +19,8 @@ public:
 	{
 		TYPE_Plane, TYPE_Sphere
 	};
-	virtual void initGL(UserData* userdata) {}
-	virtual void releaseGL() {}
+	virtual void initGL(UserData* userdata) = 0;
+	virtual void releaseGL() = 0;
 	//º∆À„Ωªµ„
 	virtual bool intersect(const Vec3& pos, const Vec3& dir, Vec3& hitPoint) = 0;
 
@@ -59,21 +60,28 @@ private:
 class Sphere : public Object3D
 {
 public:
-	Sphere(Vec3 center, float radius) 
-		:_center(center), _radius(radius) 
-	{
-		_type = Object3D::TYPE_Sphere;
-	}
-
+	Sphere(Vec3 center, float radius);
+	~Sphere();
 
 	virtual bool intersect(const Vec3& pos, const Vec3& dir, Vec3& hitPoint) override;
 
 
 	virtual void drawabletoGL(ESContext *esContext) override;
 
+
+	virtual void initGL(UserData* userdata) override;
+
+
+	virtual void releaseGL() override;
+
 private:
 	Vec3 _center;
 	float _radius;
+	GLfloat *_vertex;
+	GLuint *_indices;
+	GLuint _indicesNumb;
+	GLuint _pointsBufferVBO;
+	GLuint _pointsBufferIBO;
 };
 
 

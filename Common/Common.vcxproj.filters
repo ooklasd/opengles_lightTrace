@@ -7,7 +7,4 @@
     <ClCompile Include="F:\opengles\opengles3-book-master\Common\Source\esUtil.c" />
     <ClCompile Include="F:\opengles\opengles3-book-master\Common\Source\Win32\esUtil_win32.c" />
   </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="F:\opengles\opengles3-book-master\Common\CMakeLists.txt" />
-  </ItemGroup>
 </Project>

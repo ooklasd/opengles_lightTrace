@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3D7BA682-0328-35E0-AA69-69278B3C6329}</ProjectGuid>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
     <ProjectName>Common</ProjectName>
@@ -56,7 +56,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\lib\$(Platform)</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\lib\$(Platform)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Common.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Common</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
@@ -205,73 +205,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="F:\opengles\opengles3-book-master\Common\CMakeLists.txt">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule F:/opengles/opengles3-book-master/Common/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HF:/opengles/opengles3-book-master -BF:/opengles/opengles3-book-master --check-stamp-file F:/opengles/opengles3-book-master/Common/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/opengles/opengles3-book-master/Common/CMakeLists.txt;F:\opengles\opengles3-book-master\Common\CMakeLists.txt;F:\opengles\opengles3-book-master\Common\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\opengles\opengles3-book-master\Common\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule F:/opengles/opengles3-book-master/Common/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HF:/opengles/opengles3-book-master -BF:/opengles/opengles3-book-master --check-stamp-file F:/opengles/opengles3-book-master/Common/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/opengles/opengles3-book-master/Common/CMakeLists.txt;F:\opengles\opengles3-book-master\Common\CMakeLists.txt;F:\opengles\opengles3-book-master\Common\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\opengles\opengles3-book-master\Common\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule F:/opengles/opengles3-book-master/Common/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HF:/opengles/opengles3-book-master -BF:/opengles/opengles3-book-master --check-stamp-file F:/opengles/opengles3-book-master/Common/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/opengles/opengles3-book-master/Common/CMakeLists.txt;F:\opengles\opengles3-book-master\Common\CMakeLists.txt;F:\opengles\opengles3-book-master\Common\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\opengles\opengles3-book-master\Common\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule F:/opengles/opengles3-book-master/Common/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HF:/opengles/opengles3-book-master -BF:/opengles/opengles3-book-master --check-stamp-file F:/opengles/opengles3-book-master/Common/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/opengles/opengles3-book-master/Common/CMakeLists.txt;F:\opengles\opengles3-book-master\Common\CMakeLists.txt;F:\opengles\opengles3-book-master\Common\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\opengles\opengles3-book-master\Common\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="F:\opengles\opengles3-book-master\Common\Source\esShader.c" />
     <ClCompile Include="F:\opengles\opengles3-book-master\Common\Source\esShapes.c" />
     <ClCompile Include="F:\opengles\opengles3-book-master\Common\Source\esTransform.c" />
     <ClCompile Include="F:\opengles\opengles3-book-master\Common\Source\esUtil.c" />
     <ClCompile Include="F:\opengles\opengles3-book-master\Common\Source\Win32\esUtil_win32.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="F:\opengles\opengles3-book-master\ZERO_CHECK.vcxproj">
-      <Project>{C4179FE4-5592-34A7-8629-20222A582807}</Project>
-      <Name>ZERO_CHECK</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
