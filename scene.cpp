@@ -28,23 +28,39 @@ void CameraPerspective::setUp(GLfloat x, GLfloat y, GLfloat z)
 	_up[2] = z;
 }
 
-void CameraPerspective::init(ESContext *esContext)
+void CameraPerspective::initCamera(ESContext *esContext)
 {
 	UserData* userData = (UserData*)esContext->userData;
 
 	esMatrixLoadIdentity(&_perspectiveM);
 	esMatrixLoadIdentity(&_translate);
 
+	//透视矩阵
 	GLfloat aspect = (GLfloat)esContext->width / esContext->height;
 	esPerspective(&_perspectiveM, 45.0, aspect, 0.1, 100);
 
+	//相机旋转矩阵
 	esMatrixLookAt(&_translate
 		, _position[0], _position[1], _position[2]
 		, _lookAt[0], _lookAt[1], _lookAt[2]
 		, _up[0], _up[1], _up[2]);
 
+	esMatrixMultiply(&_mvpM, &_translate, &_perspectiveM);
+
 }
 
+
+void CameraPerspective::initGL(UserData *userdata)
+{
+	userdata->mvpPlaneLoc = glGetUniformLocation(userdata->PanelProgramObject, "u_mvpMatrix");
+	userdata->mvpSphereLoc = glGetUniformLocation(userdata->SphereProgramObject, "u_mvpMatrix");
+}
+
+void CameraPerspective::drawGL(UserData *userdata)
+{
+	glUniformMatrix4fv(userdata->mvpPlaneLoc, 1, GL_FALSE, &_mvpM.m[0][0]);
+	glUniformMatrix4fv(userdata->mvpSphereLoc, 1, GL_FALSE, &_mvpM.m[0][0]);
+}
 
 Plane::Plane(const std::vector<Vec3>& points)
 {
@@ -59,7 +75,7 @@ Plane::Plane(const std::vector<Vec3>& points)
 	if (points.size() >= 3)
 	{
 		_pointsIndices.reserve((points.size() - 2) * 3);
-		for (size_t i = 1; i < points.size(); ++i)
+		for (size_t i = 1; i < points.size()-1; ++i)
 		{
 			_pointsIndices.push_back(0);
 			_pointsIndices.push_back(i);
@@ -72,6 +88,7 @@ Plane::Plane(const std::vector<Vec3>& points)
 void Plane::initGL(UserData* userdata)
 {
 	Object3D::initGL(userdata);
+	
 	//创建顶点数据缓存并录入
 	glGenBuffers(_points.size(), &_pointsBufferVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, _pointsBufferVBO);
@@ -88,6 +105,7 @@ void Plane::releaseGL()
 {
 	glDeleteBuffers(1, &_pointsBufferIBO);
 	glDeleteBuffers(1, &_pointsBufferVBO);
+	Object3D::releaseGL();
 }
 
 void Plane::drawabletoGL(ESContext * esContext)
@@ -99,9 +117,10 @@ void Plane::drawabletoGL(ESContext * esContext)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_pointsBufferIBO);
 
-	glUniformMatrix4fv(userdata->mvpLoc, 1, GL_FALSE, &_m.m[0][0]);
+	glUniformMatrix4fv(userdata->mvpPlaneLoc, 1, GL_FALSE, &(userdata->camera._mvpM.m[0][0]));
 
 	glVertexAttrib3f(GL_COLOR, _color._v[0], _color._v[1], _color._v[2] );
+	glUniform3fv(userdata->colorLoc, 1, _color._v);
 
 	glDrawElements(GL_TRIANGLES, _pointsIndices.size(), GL_UNSIGNED_INT, nullptr);
 }
@@ -137,7 +156,8 @@ bool Sphere::intersect(const Vec3& pos, const Vec3& dir, Vec3& hitPoint)
 void Sphere::drawabletoGL(ESContext *esContext)
 {
 	auto userdata = (UserData*)esContext->userData;
-	glUniformMatrix4fv(userdata->mvpLoc, 1, GL_FALSE, &_m.m[0][0]);
+	glUniformMatrix4fv(userdata->mvpSphereLoc, 1, GL_FALSE, &(userdata->camera._mvpM.m[0][0]));
+
 	glUniform1f(userdata->radiusLoc, _radius);
 	glUniform3fv(userdata->centerLoc,3 ,_center._v);
 
@@ -146,19 +166,20 @@ void Sphere::drawabletoGL(ESContext *esContext)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _pointsBufferIBO);
 
-	glVertexAttrib3f(GL_COLOR, _color._v[0], _color._v[1], _color._v[2]);
+	glVertexAttrib3f(COLOR_LOC, _color._v[0], _color._v[1], _color._v[2]);
 	glDrawElements(GL_TRIANGLE_STRIP, _indicesNumb, GL_UNSIGNED_INT, nullptr);
 }
 
 void Sphere::initGL(UserData* userdata)
 {
-	releaseGL();
 	_indicesNumb = esGenSphere(10, _radius, &_vertex, nullptr, nullptr, &_indices);
 
 	glGenBuffers(_indicesNumb, &_pointsBufferIBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _pointsBufferIBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indicesNumb * sizeof(GLuint), _indices, GL_STATIC_DRAW);
 
+	glGetUniformLocation(userdata->radiusLoc, "u_shpereCenter");
+	glGetUniformLocation(userdata->centerLoc, "u_radius");
 }
 
 void Sphere::releaseGL()
@@ -170,6 +191,7 @@ void Sphere::releaseGL()
 
 	glDeleteBuffers(1,&_pointsBufferVBO);
 	glDeleteBuffers(1, &_pointsBufferIBO);
+	Object3D::releaseGL();
 }
 
 Object3D::Object3D()
@@ -179,7 +201,7 @@ Object3D::Object3D()
 
 void Object3D::initGL(UserData* userdata)
 {
-	userdata->mvpLoc = glGetUniformLocation(userdata->curProgramObject, "u_mvpMatrix");
+	userdata->colorLoc = glGetUniformLocation(userdata->curProgramObject, "u_colorVec3");
 }
 
 void Object3D::releaseGL()

@@ -28,6 +28,8 @@ public:
 	//»­Í¼
 	virtual void drawabletoGL(ESContext *esContext) = 0;
 
+	void setColor(const Vec3& color) { _color = color; }
+
 	ESMatrix _m;//ÊÀ½ç×ø±ê
 	TYPE _type;
 	Vec3 _color;
@@ -109,7 +111,10 @@ public:
 	void setUp(GLfloat x, GLfloat y, GLfloat z);
 
 public:
-	void init(ESContext *esContext);
+	void initCamera(ESContext *esContext);
+	void initGL(UserData *userdata);
+	void drawGL(UserData *userdata);
+	ESMatrix _mvpM;
 
 private:
 	ESMatrix _perspectiveM;

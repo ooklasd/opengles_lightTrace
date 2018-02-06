@@ -1,6 +1,7 @@
 #include "Common/esUtil.h"
 #include"scene.h"
 #include"UserData.h"
+#include <assert.h>
 
 
 
@@ -62,47 +63,86 @@ int Init ( ESContext *esContext )
 	UserData *userData = (UserData *)esContext->userData;
 	char vShaderStr[] =
 		"#version 300 es                          \n"
+		"uniform mat4 u_mvpMatrix;                         \n"
 		"layout(location = 0) in vec4 vPosition;  \n"
-		"uniform mat4 u_mvpMatrix;                   \n"
 		"void main()                              \n"
 		"{                                        \n"
-		"   gl_Position = vPosition;              \n"
+		"   gl_Position = u_mvpMatrix*vPosition;              \n"
 		"}                                        \n";
 
 	char fShaderStr[] =
 		"#version 300 es                              \n"
 		"precision mediump float;                     \n"
+		"uniform vec3 u_colorVec3;					 \n"
+		"uniform vec3 u_shpereCenter;					 \n"
+		"uniform float u_radius;					 \n"
 		"out vec4 fragColor;                          \n"
 		"void main()                                  \n"
 		"{                                            \n"
-		"   fragColor = vec4 ( 1.0, 0.0, 0.0, 1.0 );  \n"
+		"   fragColor = vec4 ( u_colorVec3, 1.0 );  \n"
 		"}                                            \n";
 
 	userData->PanelProgramObject = esLoadProgram(vShaderStr, fShaderStr);
 	userData->SphereProgramObject = esLoadProgram(vShaderStr, fShaderStr);
 
+	assert(userData->PanelProgramObject != 0);
+	assert(userData->SphereProgramObject != 0);
+	if (userData->PanelProgramObject == 0) return false;
+	if (userData->SphereProgramObject == 0) return false;
+
 	glClearColor ( 1.0f, 1.0f, 1.0f, 0.0f );
 
+	//设置相机
+	auto& camera = userData->camera;
+	camera.setPosition(0.f, 1.0f, -1.f);
+	camera.setLookAt(0, 0.5f, 0.5f);
+	camera.setUp(0.0f,1.0f,0.0f);
+	camera.initCamera(esContext);
+	camera.initGL(userData);
+
+
 	//设置对象
-	auto& objs = userData->objects;
+	auto& objs = userData->objects;	
 
 	//添加一个球体
 	//objs.push_back(std::shared_ptr<Object3D>(new Sphere(Vec3({0.f,0.f,0.f}),1.f )));
 
-	//添加地面面
-	auto p = new Plane({ 
-		Vec3{ -0.3f	,-0.3f	,0.0f },
-		Vec3{ 0.3f	,-0.3f	,0.0f },
-		Vec3{ 0.3f	,0.3f	,0.0f } });
-	objs.push_back(std::shared_ptr<Object3D>(p));
+	{
+		//添加地面面
+		auto p = new Plane({
+			Vec3{ 1.f	,0.0f,1.f },
+			Vec3{ 1.f	,0.0f,-1.f },
+			Vec3{ -1.f	,0.0f,-1.f },
+			Vec3{ -1.f	,0.0f,1.f }
+			});
+		p->setColor({ 0.f,1.f,1.f });
+		objs.push_back(std::shared_ptr<Object3D>(p));
+	}
+
+	{
+		//添加墙面
+		auto p = new Plane({
+			Vec3{ 1.f	,1.f  ,0.0f },
+			Vec3{ 1.f	,-1.f ,0.0f },
+			Vec3{ -1.f	,-1.f ,0.0f },
+			Vec3{ -1.f	,1.f  ,0.0f }
+			});
+		p->setColor({ 0.5f,0.3f,0.3f });
+		objs.push_back(std::shared_ptr<Object3D>(p));
+	}
 
 
 	//初始化对象
 	for each (auto obj in userData->objects)
 	{
+		switch (obj->_type)
+		{
+		case Object3D::TYPE_Plane:userData->curProgramObject = userData->PanelProgramObject; break;
+		case Object3D::TYPE_Sphere:userData->curProgramObject = userData->SphereProgramObject; break;
+		}
 		obj->initGL(userData);
+		userData->curProgramObject = 0;
 	}
-
 	return TRUE;
 }
 
@@ -112,7 +152,8 @@ int Init ( ESContext *esContext )
 void Draw ( ESContext *esContext )
 {
 	UserData *userData = (UserData *)esContext->userData;
-	
+	userData->camera.drawGL(userData);
+
 	// Set the viewport
 	glViewport ( 0, 0, esContext->width, esContext->height );
 

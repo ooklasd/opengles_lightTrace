@@ -20,8 +20,9 @@ struct UserData
 	
 	CameraPerspective camera;
 
-	GLuint mvpLoc;		//世界坐标
-	GLuint colorLoc;	//颜色
+	GLint mvpPlaneLoc;			//世界坐标
+	GLint mvpSphereLoc;		//世界坐标
+	GLint colorLoc;			//颜色
 
 	GLuint radiusLoc;	//半径
 	GLuint centerLoc;	//圆心

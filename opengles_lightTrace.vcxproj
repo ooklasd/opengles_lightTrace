@@ -94,6 +94,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <AdditionalDependencies>lib\$(Platform)\Common.lib;lib\$(Platform)\libEGL.lib;lib\$(Platform)\libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
