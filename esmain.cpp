@@ -94,7 +94,7 @@ int Init ( ESContext *esContext )
 
 	//设置相机
 	auto& camera = userData->camera;
-	camera.setPosition(0.f, 1.0f, -1.f);
+	camera.setPosition(0.f, 1.0f, -3.f);
 	camera.setLookAt(0, 0.5f, 0.5f);
 	camera.setUp(0.0f,1.0f,0.0f);
 	camera.initCamera(esContext);
@@ -110,26 +110,35 @@ int Init ( ESContext *esContext )
 	{
 		//添加地面面
 		auto p = new Plane({
-			Vec3{ 1.f	,0.0f,1.f },
-			Vec3{ 1.f	,0.0f,-1.f },
-			Vec3{ -1.f	,0.0f,-1.f },
-			Vec3{ -1.f	,0.0f,1.f }
+			Vec3{ 0.5f	,0.0f,0.5f },
+			Vec3{ 0.5f	,0.0f,-0.5f },
+			Vec3{ -0.5f	,0.0f,-0.5f },
+			Vec3{ -0.5f	,0.0f,0.5f }
 			});
-		p->setColor({ 0.f,1.f,1.f });
+		p->setColor({ 0.f,0.5f,0.f });
 		objs.push_back(std::shared_ptr<Object3D>(p));
 	}
 
 	{
 		//添加墙面
 		auto p = new Plane({
-			Vec3{ 1.f	,1.f  ,0.0f },
-			Vec3{ 1.f	,-1.f ,0.0f },
-			Vec3{ -1.f	,-1.f ,0.0f },
-			Vec3{ -1.f	,1.f  ,0.0f }
+			Vec3{ 0.5f	,1.0f  ,0.5f },
+			Vec3{ 0.5f	,0.0f ,0.5f },
+			Vec3{ -0.5f	,0.0f ,0.5f },
+			Vec3{ -0.5f	,1.0f  ,0.5f }
 			});
-		p->setColor({ 0.5f,0.3f,0.3f });
+		p->setColor({ 0.5f,0.f,0.f });
 		objs.push_back(std::shared_ptr<Object3D>(p));
 	}
+
+	//{
+	//	//添加球体
+	//	auto p = new Sphere({
+	//		Vec3({0.5f,0.5f,0.5f}),0.2f
+	//		});
+	//	p->setColor({ 0.0f,0.f,0.5f });
+	//	objs.push_back(std::shared_ptr<Object3D>(p));
+	//}
 
 
 	//初始化对象
@@ -180,6 +189,7 @@ void Draw ( ESContext *esContext )
 		//draw
 		it->drawabletoGL(esContext);
 	}
+
 
 	////设置light
 	//for each (Light it in userData->lights)
