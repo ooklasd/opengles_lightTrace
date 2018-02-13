@@ -20,6 +20,7 @@ public:
 		TYPE_Plane, TYPE_Sphere
 	};
 	Object3D();
+	virtual ~Object3D() {}
 	virtual void initGL(UserData* userdata);
 	virtual void releaseGL();
 	//计算交点
@@ -40,7 +41,7 @@ class Plane : public Object3D
 {
 public:
 	Plane(const std::vector<Vec3>& points);
-
+	~Plane() {};
 	// 通过 Object3D 继承
 	virtual void drawabletoGL(ESContext * esContext) override;
 

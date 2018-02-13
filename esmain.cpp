@@ -95,7 +95,7 @@ int Init ( ESContext *esContext )
 	//设置相机
 	auto& camera = userData->camera;
 	camera.setPosition(0.f, 1.0f, -3.f);
-	camera.setLookAt(0, 0.5f, 0.5f);
+	camera.setLookAt(0, 0.5f, 0.0f);
 	camera.setUp(0.0f,1.0f,0.0f);
 	camera.initCamera(esContext);
 	camera.initGL(userData);
@@ -169,6 +169,12 @@ void Draw ( ESContext *esContext )
 	// Clear the color buffer
 	glClear ( GL_COLOR_BUFFER_BIT );
 
+	//改变相机
+	auto& camera = userData->camera;
+	camera.setPosition(cos(userData->angle)*userData->cameraradius
+		,1.0f
+		,sin(userData->angle)*userData->cameraradius);
+	camera.initCamera(esContext);
 
 	// Load the vertex data
 
@@ -196,7 +202,9 @@ void Draw ( ESContext *esContext )
 	//{
 	//	it.drawabletoGL(userData);
 	//}
-
+	Sleep(16);
+	if (userData->angle > 10) userData->angle -= PI;
+	userData->angle += userData->speed;
 }
 
 void Shutdown ( ESContext *esContext )

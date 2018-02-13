@@ -4,6 +4,7 @@
 #include<memory>
 #include"Common\esUtil.h"
 #include"scene.h"
+#define PI 3.1415926535897932384626433832795f
 struct UserData
 {
 	// Handle to a program object
@@ -30,5 +31,9 @@ struct UserData
 	float ambientLight;//环境光
 	Vec3 ambientColor;//环境光颜色
 	//GLuint radiusLoc;
+
+	float angle = PI;
+	float speed = 0.05;
+	float cameraradius = 2;
 
 } ;
