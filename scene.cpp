@@ -52,14 +52,14 @@ void CameraPerspective::initCamera(ESContext *esContext)
 
 void CameraPerspective::initGL(UserData *userdata)
 {
-	userdata->mvpPlaneLoc = glGetUniformLocation(userdata->PanelProgramObject, "u_mvpMatrix");
-	userdata->mvpSphereLoc = glGetUniformLocation(userdata->SphereProgramObject, "u_mvpMatrix");
+	userdata->mPlaneLoc = glGetUniformLocation(userdata->PanelProgramObject, "u_objectMatrix");
+	userdata->mSphereLoc = glGetUniformLocation(userdata->SphereProgramObject, "u_objectMatrix");
 }
 
 void CameraPerspective::drawGL(UserData *userdata)
 {
-	glUniformMatrix4fv(userdata->mvpPlaneLoc, 1, GL_FALSE, &_mvpM.m[0][0]);
-	glUniformMatrix4fv(userdata->mvpSphereLoc, 1, GL_FALSE, &_mvpM.m[0][0]);
+	glUniformMatrix4fv(userdata->mPlaneLoc, 1, GL_FALSE, &_mvpM.m[0][0]);
+	glUniformMatrix4fv(userdata->mSphereLoc, 1, GL_FALSE, &_mvpM.m[0][0]);
 }
 
 Plane::Plane(const std::vector<Vec3>& points)
@@ -112,6 +112,7 @@ void Plane::releaseGL()
 
 void Plane::drawabletoGL(ESContext * esContext)
 {
+	Object3D::drawabletoGL(esContext);
 	auto userdata = (UserData*)esContext->userData;
 	glBindBuffer(GL_ARRAY_BUFFER, _pointsBufferVBO);
 	glVertexAttribPointer(POSITION_LOC, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), nullptr);
@@ -119,7 +120,7 @@ void Plane::drawabletoGL(ESContext * esContext)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_pointsBufferIBO);
 
-	glUniformMatrix4fv(userdata->mvpPlaneLoc, 1, GL_FALSE, &(userdata->camera._mvpM.m[0][0]));
+	glUniformMatrix4fv(userdata->mPlaneLoc, 1, GL_FALSE, &(_m.m[0][0]));
 
 	glUniform3fv(userdata->colorLoc, 1, _color._v);
 
@@ -157,8 +158,9 @@ bool Sphere::intersect(const Vec3& pos, const Vec3& dir, Vec3& hitPoint)
 
 void Sphere::drawabletoGL(ESContext *esContext)
 {
+	Object3D::drawabletoGL(esContext);
 	auto userdata = (UserData*)esContext->userData;
-	glUniformMatrix4fv(userdata->mvpSphereLoc, 1, GL_FALSE, &(userdata->camera._mvpM.m[0][0]));
+	glUniformMatrix4fv(userdata->mSphereLoc, 1, GL_FALSE, &(_m.m[0][0]));
 
 	glUniform1f(userdata->radiusLoc, _radius);
 	glUniform3fv(userdata->centerLoc,3 ,_center._v);
@@ -213,9 +215,16 @@ Object3D::Object3D()
 void Object3D::initGL(UserData* userdata)
 {
 	userdata->colorLoc = glGetUniformLocation(userdata->curProgramObject, "u_colorVec3");
+	userdata->mvpCameraLoc = glGetUniformLocation(userdata->curProgramObject, "u_mvpMatrix");
 }
 
 void Object3D::releaseGL()
 {
 
+}
+
+void Object3D::drawabletoGL(ESContext *esContext)
+{
+	UserData* us = (UserData*)esContext->userData;
+	glUniformMatrix4fv(us->mvpCameraLoc, 1, false, &(us->camera._mvpM.m[0][0]));
 }

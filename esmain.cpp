@@ -60,14 +60,18 @@ GLuint LoadShader ( GLenum type, const char *shaderSrc )
 //
 int Init ( ESContext *esContext )
 {
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
 	UserData *userData = (UserData *)esContext->userData;
 	char vShaderStr[] =
 		"#version 300 es                          \n"
 		"uniform mat4 u_mvpMatrix;                         \n"
+		"uniform mat4 u_objectMatrix;                         \n"
 		"layout(location = 0) in vec4 vPosition;  \n"
 		"void main()                              \n"
 		"{                                        \n"
-		"   gl_Position = u_mvpMatrix*vPosition;              \n"
+		"   gl_Position = u_mvpMatrix*u_objectMatrix*vPosition;              \n"
 		"}                                        \n";
 
 	char fShaderStr[] =
@@ -108,7 +112,7 @@ int Init ( ESContext *esContext )
 	{
 		//添加球体
 		auto p = new Sphere({
-			Vec3({ 0.0f,0.5f,0.5f }),1.0f
+			Vec3({ 0.0f,0.5f,0.0f }),0.1f
 			});
 		p->setColor({ 0.0f,0.f,0.5f });
 		objs.push_back(std::shared_ptr<Object3D>(p));
@@ -152,6 +156,8 @@ int Init ( ESContext *esContext )
 		obj->initGL(userData);
 		userData->curProgramObject = 0;
 	}
+
+	
 	return TRUE;
 }
 
@@ -165,16 +171,17 @@ void Draw ( ESContext *esContext )
 
 	// Set the viewport
 	glViewport ( 0, 0, esContext->width, esContext->height );
-
+	glClearColor(0.5, 0.5, 0.5, 0);
+	glClearDepthf(1.0f);
 	// Clear the color buffer
-	glClear ( GL_COLOR_BUFFER_BIT );
+	glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//改变相机
-	auto& camera = userData->camera;
-	camera.setPosition(cos(userData->angle)*userData->cameraradius
+	auto camera = &userData->camera;
+	camera->setPosition(cos(userData->angle)*userData->cameraradius
 		,1.0f
 		,sin(userData->angle)*userData->cameraradius);
-	camera.initCamera(esContext);
+	camera->initCamera(esContext);
 
 	// Load the vertex data
 
