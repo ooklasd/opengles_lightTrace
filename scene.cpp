@@ -93,11 +93,13 @@ void Plane::initGL(UserData* userdata)
 	glGenBuffers(_points.size(), &_pointsBufferVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, _pointsBufferVBO);
 	glBufferData(GL_ARRAY_BUFFER, _points.size() * sizeof(float), &_points.front(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//创建索引数据缓存并录入
 	glGenBuffers(_points.size(), &_pointsBufferIBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _pointsBufferIBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*_pointsIndices.size(), &_pointsIndices.front(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 }
 
@@ -119,10 +121,10 @@ void Plane::drawabletoGL(ESContext * esContext)
 
 	glUniformMatrix4fv(userdata->mvpPlaneLoc, 1, GL_FALSE, &(userdata->camera._mvpM.m[0][0]));
 
-	glVertexAttrib3f(GL_COLOR, _color._v[0], _color._v[1], _color._v[2] );
 	glUniform3fv(userdata->colorLoc, 1, _color._v);
 
 	glDrawElements(GL_TRIANGLES, _pointsIndices.size(), GL_UNSIGNED_INT, nullptr);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 bool Plane::intersect(const Vec3 & pos, const Vec3 & dir, Vec3 & hitPoint)
@@ -166,20 +168,28 @@ void Sphere::drawabletoGL(ESContext *esContext)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _pointsBufferIBO);
 
-	glVertexAttrib3f(COLOR_LOC, _color._v[0], _color._v[1], _color._v[2]);
-	glDrawElements(GL_TRIANGLE_STRIP, _indicesNumb, GL_UNSIGNED_INT, nullptr);
+	glUniform3fv(userdata->colorLoc, 1, _color._v);
+
+	glDrawElements(GL_TRIANGLES, _indicesNumb, GL_UNSIGNED_INT, nullptr);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void Sphere::initGL(UserData* userdata)
 {
-	_indicesNumb = esGenSphere(10, _radius, &_vertex, nullptr, nullptr, &_indices);
+	if (_indicesNumb == 0)
+	{
+		_indicesNumb = esGenSphere(10, _radius, &_vertex, nullptr, nullptr, &_indices);
+	}
+	esMatrixLoadIdentity(&_m);
+	esTranslate(&_m, _center[0], _center[1], _center[2]);
 
 	glGenBuffers(_indicesNumb, &_pointsBufferIBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _pointsBufferIBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indicesNumb * sizeof(GLuint), _indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	glGetUniformLocation(userdata->radiusLoc, "u_shpereCenter");
-	glGetUniformLocation(userdata->centerLoc, "u_radius");
+	userdata->radiusLoc = glGetUniformLocation(userdata->SphereProgramObject, "u_shpereCenter");
+	userdata->centerLoc = glGetUniformLocation(userdata->SphereProgramObject, "u_radius");
 }
 
 void Sphere::releaseGL()
@@ -188,6 +198,7 @@ void Sphere::releaseGL()
 	_vertex = nullptr;
 	delete[] _indices;
 	_indices = nullptr;
+	_indicesNumb = 0;
 
 	glDeleteBuffers(1,&_pointsBufferVBO);
 	glDeleteBuffers(1, &_pointsBufferIBO);

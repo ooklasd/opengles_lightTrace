@@ -7,6 +7,7 @@
 struct Vec3
 {
 	GLfloat _v[3];
+	GLfloat operator[](size_t index)const { return _v[index]; }
 };
 
 #define POSITION_LOC    0
@@ -80,10 +81,10 @@ public:
 
 private:
 	Vec3 _center;
-	float _radius;
-	GLfloat *_vertex;
-	GLuint *_indices;
-	GLuint _indicesNumb;
+	float _radius = 0;
+	GLfloat *_vertex = nullptr;
+	GLuint *_indices = nullptr;
+	GLuint _indicesNumb = 0;
 	GLuint _pointsBufferVBO;
 	GLuint _pointsBufferIBO;
 };

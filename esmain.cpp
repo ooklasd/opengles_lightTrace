@@ -83,7 +83,8 @@ int Init ( ESContext *esContext )
 		"}                                            \n";
 
 	userData->PanelProgramObject = esLoadProgram(vShaderStr, fShaderStr);
-	userData->SphereProgramObject = esLoadProgram(vShaderStr, fShaderStr);
+	userData->SphereProgramObject = userData->PanelProgramObject;
+	//userData->SphereProgramObject = esLoadProgram(vShaderStr, fShaderStr);
 
 	assert(userData->PanelProgramObject != 0);
 	assert(userData->SphereProgramObject != 0);
@@ -104,8 +105,14 @@ int Init ( ESContext *esContext )
 	//设置对象
 	auto& objs = userData->objects;	
 
-	//添加一个球体
-	//objs.push_back(std::shared_ptr<Object3D>(new Sphere(Vec3({0.f,0.f,0.f}),1.f )));
+	{
+		//添加球体
+		auto p = new Sphere({
+			Vec3({ 0.0f,0.5f,0.5f }),1.0f
+			});
+		p->setColor({ 0.0f,0.f,0.5f });
+		objs.push_back(std::shared_ptr<Object3D>(p));
+	}
 
 	{
 		//添加地面面
@@ -131,14 +138,7 @@ int Init ( ESContext *esContext )
 		objs.push_back(std::shared_ptr<Object3D>(p));
 	}
 
-	//{
-	//	//添加球体
-	//	auto p = new Sphere({
-	//		Vec3({0.5f,0.5f,0.5f}),0.2f
-	//		});
-	//	p->setColor({ 0.0f,0.f,0.5f });
-	//	objs.push_back(std::shared_ptr<Object3D>(p));
-	//}
+	
 
 
 	//初始化对象
@@ -203,7 +203,7 @@ void Draw ( ESContext *esContext )
 	//	it.drawabletoGL(userData);
 	//}
 	Sleep(16);
-	if (userData->angle > 10) userData->angle -= PI;
+	if (userData->angle > PI*10) userData->angle -= PI*10;
 	userData->angle += userData->speed;
 }
 
