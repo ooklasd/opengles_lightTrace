@@ -31,3 +31,6 @@
 *.out
 *.app
 *.pdb
+/x64/Debug
+/Common/Common.dir/Debug
+/.vs/opengles_lightTrace/v15

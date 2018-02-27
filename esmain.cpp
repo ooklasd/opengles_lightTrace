@@ -175,7 +175,7 @@ void Draw ( ESContext *esContext )
 
 	// Set the viewport
 	glViewport ( 0, 0, esContext->width, esContext->height );
-	glClearColor(0.5, 0.5, 0.5, 0);
+	glClearColor(1.0, 1.0, 1.0, 0);
 	glClearDepthf(1.0f);
 	// Clear the color buffer
 	glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
