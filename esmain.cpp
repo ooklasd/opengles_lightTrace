@@ -80,10 +80,14 @@ int Init ( ESContext *esContext )
 		"uniform vec3 u_colorVec3;					 \n"
 		"uniform vec3 u_shpereCenter;					 \n"
 		"uniform float u_radius;					 \n"
+		"float far;					 \n"
 		"out vec4 fragColor;                          \n"
 		"void main()                                  \n"
 		"{                                            \n"
-		"   fragColor = vec4 ( u_colorVec3, 1.0 );  \n"
+		"	far =   gl_FragCoord[3]+0.4;       \n"
+		"	far =   min(1.0,far);       \n"
+		"	far =   far*far*far*far;       \n"
+		"   fragColor = vec4 ( u_colorVec3+(vec3(1.0,1.0,1.0)*(1.0-far)), 1.0 );  \n"
 		"}                                            \n";
 
 	userData->PanelProgramObject = esLoadProgram(vShaderStr, fShaderStr);
