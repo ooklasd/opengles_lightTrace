@@ -112,7 +112,7 @@ int Init ( ESContext *esContext )
 	{
 		//Ìí¼ÓÇòÌå
 		auto p = new Sphere({
-			Vec3({ 0.0f,0.5f,0.0f }),0.1f
+			Vec3({ 0.0f,0.5f,0.5f }),0.3f
 			});
 		p->setColor({ 0.0f,0.f,0.5f });
 		objs.push_back(std::shared_ptr<Object3D>(p));
